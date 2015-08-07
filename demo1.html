@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta content="text/html; charset=utf-8">
+<script type="text/javascript" src="jquery-1.11.1.js"></script>
+<title>contenteditable</title>
+<style>
+*{
+ margin:0;padding:0;
+}
+.im-message-area{
+ width:98%;
+ padding:2px;
+ height:75px;
+ border:#000 solid 1px;
+ background:#fff;
+ font:12px/20px arial,"5b8b4f53";
+ word-wrap:break-word;
+ overflow-y:auto;
+ line-height:1;
+}
+.ul{display:none;}
+.ul li{
+ background-color:#CCC;
+ width:50px;
+}
+</style>
+
+</head>
+<body>
+ <textarea id="text" style="width:300px;height:50px;"></textarea>
+ <input type="button" value="插入文字" onclick="insertText(document.getElementById('text'),' 新文字—YoyiorLee ')">
+</body>
+<script>
+function insertText(obj,str) {
+    if (document.selection) {
+        obj.focus();
+        var sel = document.selection.createRange();
+        sel.text = str;
+    } else if (typeof obj.selectionStart === 'number' && typeof obj.selectionEnd === 'number') {
+        var startPos = obj.selectionStart,
+            endPos = obj.selectionEnd,
+            cursorPos = startPos,
+            tmpStr = obj.value;
+        obj.value = tmpStr.substring(0, startPos) + str + tmpStr.substring(endPos, tmpStr.length);
+        cursorPos += str.length;
+        obj.selectionStart = obj.selectionEnd = cursorPos;
+    } else {
+        obj.value += str;
+    }
+};
+function moveEnd(obj){
+    obj.focus();
+    var len = obj.value.length;
+    if (document.selection) {
+        var sel = obj.createTextRange();
+        sel.moveStart('character',len);
+        sel.collapse();
+        sel.select();
+    } else if (typeof obj.selectionStart == 'number' && typeof obj.selectionEnd == 'number') {
+        obj.selectionStart = obj.selectionEnd = len;
+    }
+} 
+</script>
+</html>
